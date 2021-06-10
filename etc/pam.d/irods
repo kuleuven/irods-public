@@ -1,0 +1,4 @@
+auth        required      pam_env.so
+# Custom things not added to demo below
+auth        sufficient    pam_jwt.so
+auth        required      pam_deny.so

@@ -1,0 +1,11 @@
+FROM irods:mysql 
+
+ARG VERSION
+
+RUN yum swap -y irods-database-plugin-mysql-${VERSION} irods-database-plugin-postgres-${VERSION}
+RUN sed -i '/MySQL ODBC 8.0 Unicode Driver/d' /usr/local/bin/setup-irods                        
+                                                                                                
+RUN sed -i 's/MySQL/PostgreSQL/' /usr/local/bin/setup-irods                                     
+RUN sed -i 's/MySQL ODBC 8.0 Unicode Driver/PostgreSQL/' /etc/irods/server_config.json.tmpl     
+RUN sed -i 's/mysql/postgres/' /etc/irods/server_config.json.tmpl                               
+ENV DB_SRV_PORT=5432                                                                            

@@ -1,0 +1,17 @@
+{
+    "schema_name": "hosts_config",
+    "schema_version": "v3",
+    "host_entries": [
+        {
+            "address_type": "remote",
+            "addresses": [
+                {
+                    "address": "10.114.95.11"
+                },
+                {
+                    "address": "icts-t-gpfs-4"
+                }
+            ]
+        }
+    ]
+}

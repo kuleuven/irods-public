@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Write ssl certs
+mkdir -p /etc/irods/ssl
+test -f /etc/irods/ssl/dhparams.pem || openssl dhparam -2 -out /etc/irods/ssl/dhparams.pem 2048
+test -f /etc/irods/ssl/server.key || cat ${SSL_CERTIFICATE_KEY_FILE} > /etc/irods/ssl/server.key
+test -f /etc/irods/ssl/server.crt || cat ${SSL_CERTIFICATE_CHAIN_FILE} > /etc/irods/ssl/server.crt
+chown irods:irods -R /etc/irods/ssl
+chmod 600 /etc/irods/ssl/server.key
+
+if [ -n "${SSL_CA_BUNDLE}" ] && [ -f "${SSL_CA_BUNDLE}" ]; then
+  cat "${SSL_CA_BUNDLE}" >> /etc/ssl/certs/ca-bundle.crt
+fi

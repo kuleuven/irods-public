@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir -p $DEFAULT_VAULT_DIR $DEFAULT_VAULT_DIR/home/rods $DEFAULT_VAULT_DIR/trash $DEFAULT_VAULT_DIR/orphan
+chown irods:irods $DEFAULT_VAULT_DIR $DEFAULT_VAULT_DIR/home $DEFAULT_VAULT_DIR/home/rods $DEFAULT_VAULT_DIR/trash $DEFAULT_VAULT_DIR/orphan

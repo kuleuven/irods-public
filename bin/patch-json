@@ -1,0 +1,10 @@
+#!/bin/bash
+FILE=$1
+PATCH=$2
+if [ -z "$PATCH" ]; then
+  PATCH=${FILE}.tmpl
+fi
+
+envsubst < ${PATCH} > ${FILE}.patch
+cp -a ${FILE} ${FILE}.orig
+jq -s '.[0] + .[1]' ${FILE}.orig ${FILE}.patch > ${FILE}

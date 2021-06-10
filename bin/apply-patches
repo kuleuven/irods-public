@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Patch sql setup scripts
+sed -i "s/^SET SESSION .*storage_engine=.*/SET SESSION default_storage_engine='InnoDB';/" /var/lib/irods/packaging/sql/icatSysTables.sql /var/lib/irods/packaging/sql/mysql_functions.sql
+
+# Let irods cope with ipv6 database servers
+curl https://raw.githubusercontent.com/pypyodbc/pypyodbc/main/pypyodbc.py > /var/lib/irods/scripts/irods/pypyodbc.py
+
+# Fix mysql indices to use with utf8 encoding
+SQL=/var/lib/irods/packaging/sql/icatSysTables.sql
+
+# remove coll_name from index and don't create a unique index
+sed -i '/idx_coll_main2/d' $SQL
+echo "create index idx_coll_main2 on R_COLL_MAIN (parent_coll_name (767));" >> $SQL
+
+sed -i '/idx_data_main2/d' $SQL
+echo "create unique index idx_data_main2 on R_DATA_MAIN (coll_id,data_name (515),data_repl_num,data_version);" >> $SQL
+
+sed -i '/idx_data_main4/d' $SQL
+echo "create index idx_data_main4 on R_DATA_MAIN (data_name (515));" >> $SQL
+
+sed -i '/idx_grid_configuration/d' $SQL
+echo "create unique index idx_grid_configuration on R_GRID_CONFIGURATION (namespace (383), option_name (383));" >> $SQL
+
+# Replace varchar(2700) by TEXT in R_RULE_MAIN
+sed -i '8s/varchar(2700)/TEXT/g' $SQL
+
+# Set Charset=UTF8 in /var/lib/irods/.odbc.ini
+sed -i "s/'Option': '2',/'Option': '2', 'Charset': 'UTF8',/" /var/lib/irods/scripts/irods/database_connect.py

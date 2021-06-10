@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# Bail out if irods is already configured
+if [ -f /etc/irods/server_config.json ]; then
+  echo Irods is already configured, skipping setup.
+  exit 0
+fi
+
+STAGING=/var/lib/irods/.dockerstaging
+
+mkdir -p $STAGING
+
+cat > $STAGING/setup.cfg <<EOF
+irods
+irods
+1
+MySQL
+MySQL ODBC 8.0 Unicode Driver
+${DB_SRV_HOST}
+${DB_SRV_PORT}
+${DB_NAME}
+${DB_USER}
+yes
+${DB_PASSWORD}
+irodsPKey
+${ZONE}
+${SRV_PORT}
+${SRV_PORT_RANGE_START}
+${SRV_PORT_RANGE_END}
+${CTRL_PLANE_PORT}
+file:///var/lib/irods/configuration_schemas
+${ADMIN_USER}
+yes
+${SRV_ZONE_KEY}
+${SRV_NEGOTIATION_KEY}
+${CTRL_PLANE_KEY}
+${ADMIN_PASS}
+${DEFAULT_VAULT_DIR}
+EOF
+
+# Sleep until network is set up correctly
+sleep 1
+
+# Do not run irodsReServer unless alloc id is zero
+if [ -n "$NOMAD_ALLOC_INDEX" ] && [[ $NOMAD_ALLOC_INDEX -ge 1 ]]; then
+  mv /usr/sbin/irodsReServer /usr/sbin/irodsReServer.orig
+  cat > /usr/sbin/irodsReServer <<EOF
+#!/bin/bash
+echo "I'm from Barcelona, I know nothing!"
+sleep infinity
+EOF
+  chmod +x /usr/sbin/irodsReServer
+fi
+
+# Set up global irods configuration
+python /var/lib/irods/scripts/setup_irods.py < $STAGING/setup.cfg 2>&1 | tee $STAGING/setup.log
+
+# Stop irods if it is started automatically
+/sbin/runuser -u irods -- /var/lib/irods/irodsctl stop || true
+
+# Patch server_config.json
+export RE_RULEBASE_SET_JSON='["'$(echo "$RE_RULEBASE_SET" | sed 's/\s\s*/", "/g')'"]'
+patch-json /etc/irods/server_config.json
+
+# Patch irods_environment.json
+patch-json /var/lib/irods/.irods/irods_environment.json /etc/irods/irods_environment.json.tmpl
+
+# Write core.py
+: > /etc/irods/core.py
+chown irods:irods /etc/irods/core.py /var/lib/irods/config/packedRei
+for RULESET in $PYTHON_RULESETS; do
+  echo "from $RULESET import *" >> /etc/irods/core.py
+done

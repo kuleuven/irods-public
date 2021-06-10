@@ -1,0 +1,68 @@
+{   
+    "plugin_configuration": {
+        "authentication": {},
+        "database": {
+            "mysql": {
+                "db_host": "${DB_SRV_HOST}",
+                "db_name": "${DB_NAME}",
+                "db_odbc_driver": "MySQL ODBC 8.0 Unicode Driver",
+                "db_password": "${DB_PASSWORD}",
+                "db_port": ${DB_SRV_PORT},
+                "db_username": "${DB_USER}"
+            }
+        },
+        "network": {},
+        "resource": {},
+        "rule_engines": [
+            {
+                "instance_name": "irods_rule_engine_plugin-unified_storage_tiering-instance",
+                "plugin_name": "irods_rule_engine_plugin-unified_storage_tiering",
+                "plugin_specific_configuration": {}
+            },
+            {
+                "instance_name": "irods_rule_engine_plugin-irods_rule_language-instance",
+                "plugin_name": "irods_rule_engine_plugin-irods_rule_language",
+                "plugin_specific_configuration": {
+                    "re_data_variable_mapping_set": [
+                        "core"
+                    ],
+                    "re_function_name_mapping_set": [
+                        "core"
+                    ],
+                    "re_rulebase_set": ${RE_RULEBASE_SET_JSON},
+                    "regexes_for_supported_peps": [
+                        "ac[^ ]*",
+                        "msi[^ ]*",
+                        "[^ ]*pep_[^ ]*_(pre|post|except)"
+                    ]
+                },
+                "shared_memory_instance": "irods_rule_language_rule_engine"
+            },
+            {
+                "instance_name": "irods_rule_engine_plugin-cpp_default_policy-instance",
+                "plugin_name": "irods_rule_engine_plugin-cpp_default_policy",
+                "plugin_specific_configuration": {}
+            },
+            {
+                "instance_name":"irods_rule_engine_plugin-python-instance",
+                "plugin_name":"irods_rule_engine_plugin-python",
+                "plugin_specific_configuration":{}
+            },
+            {
+                "instance_name":"irods_rule_engine_plugin-audit_amqp-instance",
+                "plugin_name":"irods_rule_engine_plugin-audit_amqp",
+                "plugin_specific_configuration":{
+                    "pep_regex_to_match":"audit_.*",
+                    "amqp_topic":"audit_messages",
+                    "amqp_location":"${AMQP}",
+                    "amqp_options":""
+                }
+            }
+        ]    
+    },
+    "rule_engine_namespaces": [
+        "",
+        "audit_"
+    ],
+    "default_resource_name": "${DEFAULT_RESOURCE}"
+}

@@ -10,7 +10,7 @@ irods_ping() { (
 ) | nc $SERVER $SRV_PORT | grep -q HEARTBEAT; }
 
 irods_sanity_check() {
-  run_irods iadmin lu rods 2>/dev/null | grep -q rods
+  run_irods iadmin lu rods | grep -q rods
 }
 
 die() {

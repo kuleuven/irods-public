@@ -24,7 +24,7 @@ CREATE USER irods WITH ENCRYPTED PASSWORD 'irods';
 GRANT ALL PRIVILEGES ON DATABASE irods TO irods;  
 EOF
 
-docker run -d --name $IRODS_NAME --link $POSTGRESQL_NAME \
+docker run --name $IRODS_NAME --link $POSTGRESQL_NAME \
   --hostname $IRODS_HOST \
   -v $(pwd)/ssl:/ssl \
   -e SERVER=$IRODS_HOST \
@@ -40,8 +40,3 @@ docker run -d --name $IRODS_NAME --link $POSTGRESQL_NAME \
   -e SSL_CERTIFICATE_KEY_FILE=/ssl/key.pem \
   -e SSL_CA_BUNDLE=/ssl/ca-bundle.pem \
   $IRODS_IMAGE
-
-sleep 30
-
-echo "Testing 'iadmin lu' command"
-docker exec -ti irods runuser -u irods iadmin lu

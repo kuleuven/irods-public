@@ -25,7 +25,7 @@ CREATE USER 'irods'@'%' IDENTIFIED WITH mysql_native_password BY 'irods';
 GRANT ALL ON irods.* TO 'irods'@'%';
 EOF
 
-docker run -d --name $IRODS_NAME --link $MYSQL_NAME \
+docker run --name $IRODS_NAME --link $MYSQL_NAME \
   --hostname $IRODS_HOST \
   -v $(pwd)/ssl:/ssl \
   -e SERVER=$IRODS_HOST \
@@ -41,8 +41,3 @@ docker run -d --name $IRODS_NAME --link $MYSQL_NAME \
   -e SSL_CERTIFICATE_KEY_FILE=/ssl/key.pem \
   -e SSL_CA_BUNDLE=/ssl/ca-bundle.pem \
   $IRODS_IMAGE
-
-sleep 30
-
-echo "Testing 'iadmin lu' command"
-docker exec -ti irods runuser -u irods iadmin lu

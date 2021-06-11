@@ -1,0 +1,34 @@
+#!/bin/bash
+
+run_irods() {
+  runuser -u irods -- "$@"
+}
+
+irods_ping() { (
+  echo -ne '\x00\x00\x00\x33'
+  echo '<MsgHeader_PI><type>HEARTBEAT</type></MsgHeader_PI>'
+) | nc $SERVER $SRV_PORT | grep -q HEARTBEAT; }
+
+irods_sanity_check() {
+  run_irods iadmin lu rods 2>/dev/null | grep -q rods
+}
+
+die() {
+  RC=$1
+  shift
+  echo "$@" >&2
+  exit $RC
+}
+
+if ! grep -q supervisord /proc/1/cmdline; then
+  die 127 "starting up"
+fi
+
+if [ $(( $(date +%s) - $(stat --format=%Y /proc/1/cmdline) )) -lt 5 ]; then
+  die 128 "supervisord is less than 5 seconds active"
+fi
+
+irods_ping || die 1 "IRODS is not responding to HEATBEAT"
+irods_sanity_check || die 2 "IRODS fails sanity check"
+echo Everything is fine
+exit 0

@@ -7,7 +7,7 @@ IRODS_HOST=irods.container
 IRODS_ZONE=test
 IRODS_IMAGE=irods:mysql
 
-docker build -t $IRODS_IMAGE --build-arg VERSION=4.2.9 .
+[ $(docker image ls $IRODS_IMAGE | wc -l) -eq 2 ] || docker build -t $IRODS_IMAGE --build-arg VERSION=4.2.9 .
 docker rm -f $MYSQL_NAME $IRODS_NAME
 
 mkdir -p ssl
@@ -25,7 +25,7 @@ CREATE USER 'irods'@'%' IDENTIFIED WITH mysql_native_password BY 'irods';
 GRANT ALL ON irods.* TO 'irods'@'%';
 EOF
 
-docker run --name $IRODS_NAME --link $MYSQL_NAME \
+docker run -d --name $IRODS_NAME --link $MYSQL_NAME \
   --hostname $IRODS_HOST \
   -v $(pwd)/ssl:/ssl \
   -e SERVER=$IRODS_HOST \
@@ -41,3 +41,9 @@ docker run --name $IRODS_NAME --link $MYSQL_NAME \
   -e SSL_CERTIFICATE_KEY_FILE=/ssl/key.pem \
   -e SSL_CA_BUNDLE=/ssl/ca-bundle.pem \
   $IRODS_IMAGE
+
+set -e
+
+until docker exec -i $IRODS_NAME /usr/local/bin/healthcheck; do
+  sleep 1
+done

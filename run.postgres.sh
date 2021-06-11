@@ -7,7 +7,7 @@ IRODS_HOST=irods.container
 IRODS_ZONE=test
 IRODS_IMAGE=irods:postgres
 
-docker build -t $IRODS_IMAGE --build-arg VERSION=4.2.9 -f Dockerfile.postgres .
+[ $(docker image ls $IRODS_IMAGE | wc -l) -eq 2 ] || docker build -t $IRODS_IMAGE --build-arg VERSION=4.2.9 -f Dockerfile.postgres .
 docker rm -f $POSTGRESQL_NAME $IRODS_NAME
 
 mkdir -p ssl
@@ -40,3 +40,9 @@ docker run --name $IRODS_NAME --link $POSTGRESQL_NAME \
   -e SSL_CERTIFICATE_KEY_FILE=/ssl/key.pem \
   -e SSL_CA_BUNDLE=/ssl/ca-bundle.pem \
   $IRODS_IMAGE
+
+set -e
+
+until docker exec -i $IRODS_NAME /usr/local/bin/healthcheck; do
+  sleep 1
+done

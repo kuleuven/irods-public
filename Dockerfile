@@ -31,7 +31,8 @@ RUN yum install -y \
   libexif-devel libxml2-devel samtools-htslib \
   crontabs \
   mailx \
-  nc
+  nc \
+  lnav
 
 # Use more recent mysql odbc connector
 RUN yum localinstall -y https://repo.mysql.com/yum/mysql-connectors-community/el/7/x86_64/mysql-connector-odbc-8.0.25-1.el7.x86_64.rpm

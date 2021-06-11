@@ -1,5 +1,7 @@
 #!/bin/bash
 
+: ${VERSION:=4.2.9}
+
 POSTGRESQL_NAME=postgres
 POSTGRESQL_ROOT_PASSWORD=rootpw
 IRODS_NAME=irods
@@ -7,7 +9,7 @@ IRODS_HOST=irods.container
 IRODS_ZONE=test
 IRODS_IMAGE=irods:postgres
 
-[ $(docker image ls $IRODS_IMAGE | wc -l) -eq 2 ] || docker build -t $IRODS_IMAGE --build-arg VERSION=4.2.9 -f Dockerfile.postgres .
+docker build -t $IRODS_IMAGE --build-arg VERSION=$VERSION -f Dockerfile.postgres .
 docker rm -f $POSTGRESQL_NAME $IRODS_NAME
 
 mkdir -p ssl
@@ -24,7 +26,7 @@ CREATE USER irods WITH ENCRYPTED PASSWORD 'irods';
 GRANT ALL PRIVILEGES ON DATABASE irods TO irods;  
 EOF
 
-docker run --name $IRODS_NAME --link $POSTGRESQL_NAME \
+docker run -d --name $IRODS_NAME --link $POSTGRESQL_NAME \
   --hostname $IRODS_HOST \
   -v $(pwd)/ssl:/ssl \
   -e SERVER=$IRODS_HOST \

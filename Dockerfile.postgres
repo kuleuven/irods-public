@@ -1,4 +1,4 @@
-FROM irods:mysql 
+FROM irods:mysql
 
 ARG VERSION
 

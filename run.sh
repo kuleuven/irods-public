@@ -1,5 +1,7 @@
 #!/bin/bash
 
+: ${VERSION:=4.2.9}
+
 MYSQL_NAME=mysql
 MYSQL_ROOT_PASSWORD=rootpw
 IRODS_NAME=irods
@@ -7,7 +9,7 @@ IRODS_HOST=irods.container
 IRODS_ZONE=test
 IRODS_IMAGE=irods:mysql
 
-[ $(docker image ls $IRODS_IMAGE | wc -l) -eq 2 ] || docker build -t $IRODS_IMAGE --build-arg VERSION=4.2.9 .
+docker build -t $IRODS_IMAGE --build-arg VERSION=$VERSION .
 docker rm -f $MYSQL_NAME $IRODS_NAME
 
 mkdir -p ssl

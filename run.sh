@@ -13,7 +13,7 @@ docker build -t $IRODS_IMAGE --build-arg VERSION=$VERSION .
 docker rm -f $MYSQL_NAME $IRODS_NAME
 
 mkdir -p ssl
-test -f ssl/cert.pem || openssl req -x509 -nodes -newkey rsa:4096 -keyout ssl/key.pem -out ssl/cert.pem -days 365 \
+test -f ssl/cert.pem || docker run -i --rm -v $(pwd)/ssl:/ssl securefab/openssl req -x509 -nodes -newkey rsa:4096 -keyout /ssl/key.pem -out /ssl/cert.pem -days 365 \
      -subj '/CN=$(IRODS_HOST)' \
      -addext "subjectAltName = DNS:$IRODS_HOST"
 cat ssl/cert.pem > ssl/ca-bundle.pem

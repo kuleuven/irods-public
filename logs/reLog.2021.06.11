@@ -1,0 +1,372 @@
+DEBUG: RE server is awake.
+DEBUG: config file found [/etc/irods/hosts_config.json]
+DEBUG: Gathering rules for execution ...
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+DEBUG: load_in_addr_from_hostname :: DNS cache miss for hostname [hostname=irods.container].
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+DEBUG: resolved plugin home [/usr/lib/irods/plugins/network/]
+DEBUG: load_plugin - calling plugin_factory() in [/usr/lib/irods/plugins/network/libtcp_client.so]
+DEBUG: load_plugin - loaded [tcp_client]
+sending header: len = 139
+<MsgHeader_PI>
+<type>RODS_CONNECT</type>
+<msgLen>365</msgLen>
+<errorLen>0</errorLen>
+<bsLen>0</bsLen>
+<intInfo>0</intInfo>
+</MsgHeader_PI>
+
+sending msg: 
+<StartupPack_PI>
+<irodsProt>0</irodsProt>
+<reconnFlag>0</reconnFlag>
+<connectCnt>0</connectCnt>
+<proxyUser>rods</proxyUser>
+<proxyRcatZone>test</proxyRcatZone>
+<clientUser>rods</clientUser>
+<clientRcatZone>test</clientRcatZone>
+<relVersion>rods4.2.9</relVersion>
+<apiVersion>d</apiVersion>
+<option>irodsReServerrequest_server_negotiation</option>
+</StartupPack_PI>
+
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+DEBUG3: received header: len = 139
+<MsgHeader_PI>
+<type>RODS_CS_NEG_T</type>
+<msgLen>78</msgLen>
+<errorLen>0</errorLen>
+<bsLen>0</bsLen>
+<intInfo>0</intInfo>
+</MsgHeader_PI>
+
+DEBUG3: received msg: 
+<CS_NEG_PI>
+<status>1</status>
+<result>CS_NEG_DONT_CARE</result>
+</CS_NEG_PI>
+
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+ ERROR: [-]	/repos/irods/lib/core/src/sockComm.cpp:779:int connectToRhost(rcComm_t *, int, int) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [failed to call 'read header']
+	[-]	/repos/irods/lib/core/src/sockComm.cpp:527:irods::error readVersion(irods::network_object_ptr, version_t **) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [failed to call 'read header']
+		[-]	/repos/irods/lib/core/src/sockComm.cpp:197:irods::error readMsgHeader(irods::network_object_ptr, msgHeader_t *, struct timeval *) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [failed to call 'read header']
+			[-]	/repos/irods/plugins/network/tcp/libtcp.cpp:190:irods::error tcp_read_msg_header(irods::plugin_context &, void *, struct timeval *) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [error reading from socket after [0] bytes read]
+				[-]	/repos/irods/plugins/network/tcp/libtcp.cpp:71:irods::error tcp_socket_read(int, void *, int, int &, struct timeval *) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [error reading from socket after [0] bytes read]
+
+ ERROR: _rcConnect: connectToRhost error, server on irods.container:1247 is probably down status = -116104 SYS_SOCK_READ_ERR, Connection reset by peer
+ ERROR: iRODS Exception:
+    file: /repos/irods/lib/core/src/client_connection.cpp
+    function: void irods::experimental::client_connection::connect_and_login(const std::string_view, const int, const std::string_view, const std::string_view)
+    line: 91
+    code: -305000 (USER_SOCK_CONNECT_ERR)
+    message:
+        connect error
+stack trace:
+--------------
+
+Dumping stack trace
+<0>	Offset: 0x6e 	Address: 0x7f9b2920abae	irods::exception::exception(long, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)
+<1>	Offset: 0x184	Address: 0x7f9b2a205984	irods::experimental::client_connection::connect_and_login(std::__1::basic_string_view<char, std::__1::char_traits<char> >, int, std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::basic_string_view<char, std::__1::char_traits<char> >)
+<2>	Offset: 0xa1 	Address: 0x7f9b2a2057c1	irods::experimental::client_connection::client_connection()
+<3>	Offset:      	Address: 0x41c6a8	irodsReServer(main+0x3e8) [0x41c6a8]
+<4>	Offset:      	Address: 0x7f9b27df9555	/lib64/libc.so.6(__libc_start_main+0xf5) [0x7f9b27df9555]
+<5>	Offset:      	Address: 0x41c1fa	irodsReServer() [0x41c1fa]
+
+
+sending header: len = 140
+<MsgHeader_PI>
+<type>RODS_CS_NEG_T</type>
+<msgLen>141</msgLen>
+<errorLen>0</errorLen>
+<bsLen>0</bsLen>
+<intInfo>0</intInfo>
+</MsgHeader_PI>
+
+sending msg: 
+<CS_NEG_PI>
+<status>1</status>
+<result>cs_neg_sid_kw=8ce09dfb342d48e29c9710d3b2826d7a;cs_neg_result_kw=CS_NEG_USE_SSL;</result>
+</CS_NEG_PI>
+
+DEBUG: RE server is going to sleep.
+DEBUG: RE server is awake.
+DEBUG: config file found [/etc/irods/hosts_config.json]
+DEBUG: Gathering rules for execution ...
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+DEBUG: load_in_addr_from_hostname :: DNS cache miss for hostname [hostname=irods.container].
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+sending header: len = 139
+<MsgHeader_PI>
+<type>RODS_CONNECT</type>
+<msgLen>365</msgLen>
+<errorLen>0</errorLen>
+<bsLen>0</bsLen>
+<intInfo>0</intInfo>
+</MsgHeader_PI>
+
+sending msg: 
+<StartupPack_PI>
+<irodsProt>0</irodsProt>
+<reconnFlag>0</reconnFlag>
+<connectCnt>0</connectCnt>
+<proxyUser>rods</proxyUser>
+<proxyRcatZone>test</proxyRcatZone>
+<clientUser>rods</clientUser>
+<clientRcatZone>test</clientRcatZone>
+<relVersion>rods4.2.9</relVersion>
+<apiVersion>d</apiVersion>
+<option>irodsReServerrequest_server_negotiation</option>
+</StartupPack_PI>
+
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+DEBUG3: received header: len = 139
+<MsgHeader_PI>
+<type>RODS_CS_NEG_T</type>
+<msgLen>78</msgLen>
+<errorLen>0</errorLen>
+<bsLen>0</bsLen>
+<intInfo>0</intInfo>
+</MsgHeader_PI>
+
+DEBUG3: received msg: 
+<CS_NEG_PI>
+<status>1</status>
+<result>CS_NEG_DONT_CARE</result>
+</CS_NEG_PI>
+
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+ ERROR: [-]	/repos/irods/lib/core/src/sockComm.cpp:779:int connectToRhost(rcComm_t *, int, int) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [failed to call 'read header']
+	[-]	/repos/irods/lib/core/src/sockComm.cpp:527:irods::error readVersion(irods::network_object_ptr, version_t **) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [failed to call 'read header']
+		[-]	/repos/irods/lib/core/src/sockComm.cpp:197:irods::error readMsgHeader(irods::network_object_ptr, msgHeader_t *, struct timeval *) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [failed to call 'read header']
+			[-]	/repos/irods/plugins/network/tcp/libtcp.cpp:190:irods::error tcp_read_msg_header(irods::plugin_context &, void *, struct timeval *) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [error reading from socket after [0] bytes read]
+				[-]	/repos/irods/plugins/network/tcp/libtcp.cpp:71:irods::error tcp_socket_read(int, void *, int, int &, struct timeval *) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [error reading from socket after [0] bytes read]
+
+ ERROR: _rcConnect: connectToRhost error, server on irods.container:1247 is probably down status = -116104 SYS_SOCK_READ_ERR, Connection reset by peer
+ ERROR: iRODS Exception:
+    file: /repos/irods/lib/core/src/client_connection.cpp
+    function: void irods::experimental::client_connection::connect_and_login(const std::string_view, const int, const std::string_view, const std::string_view)
+    line: 91
+    code: -305000 (USER_SOCK_CONNECT_ERR)
+    message:
+        connect error
+stack trace:
+--------------
+
+Dumping stack trace
+<0>	Offset: 0x6e 	Address: 0x7f9b2920abae	irods::exception::exception(long, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)
+<1>	Offset: 0x184	Address: 0x7f9b2a205984	irods::experimental::client_connection::connect_and_login(std::__1::basic_string_view<char, std::__1::char_traits<char> >, int, std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::basic_string_view<char, std::__1::char_traits<char> >)
+<2>	Offset: 0xa1 	Address: 0x7f9b2a2057c1	irods::experimental::client_connection::client_connection()
+<3>	Offset:      	Address: 0x41c6a8	irodsReServer(main+0x3e8) [0x41c6a8]
+<4>	Offset:      	Address: 0x7f9b27df9555	/lib64/libc.so.6(__libc_start_main+0xf5) [0x7f9b27df9555]
+<5>	Offset:      	Address: 0x41c1fa	irodsReServer() [0x41c1fa]
+
+
+sending header: len = 140
+<MsgHeader_PI>
+<type>RODS_CS_NEG_T</type>
+<msgLen>141</msgLen>
+<errorLen>0</errorLen>
+<bsLen>0</bsLen>
+<intInfo>0</intInfo>
+</MsgHeader_PI>
+
+sending msg: 
+<CS_NEG_PI>
+<status>1</status>
+<result>cs_neg_sid_kw=8ce09dfb342d48e29c9710d3b2826d7a;cs_neg_result_kw=CS_NEG_USE_SSL;</result>
+</CS_NEG_PI>
+
+DEBUG: RE server is going to sleep.
+DEBUG: RE server is awake.
+DEBUG: config file found [/etc/irods/hosts_config.json]
+DEBUG: Gathering rules for execution ...
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+DEBUG: load_in_addr_from_hostname :: DNS cache miss for hostname [hostname=irods.container].
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+sending header: len = 139
+<MsgHeader_PI>
+<type>RODS_CONNECT</type>
+<msgLen>365</msgLen>
+<errorLen>0</errorLen>
+<bsLen>0</bsLen>
+<intInfo>0</intInfo>
+</MsgHeader_PI>
+
+sending msg: 
+<StartupPack_PI>
+<irodsProt>0</irodsProt>
+<reconnFlag>0</reconnFlag>
+<connectCnt>0</connectCnt>
+<proxyUser>rods</proxyUser>
+<proxyRcatZone>test</proxyRcatZone>
+<clientUser>rods</clientUser>
+<clientRcatZone>test</clientRcatZone>
+<relVersion>rods4.2.9</relVersion>
+<apiVersion>d</apiVersion>
+<option>irodsReServerrequest_server_negotiation</option>
+</StartupPack_PI>
+
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+DEBUG3: received header: len = 139
+<MsgHeader_PI>
+<type>RODS_CS_NEG_T</type>
+<msgLen>78</msgLen>
+<errorLen>0</errorLen>
+<bsLen>0</bsLen>
+<intInfo>0</intInfo>
+</MsgHeader_PI>
+
+DEBUG3: received msg: 
+<CS_NEG_PI>
+<status>1</status>
+<result>CS_NEG_DONT_CARE</result>
+</CS_NEG_PI>
+
+DEBUG: xmsg_host is not defined
+DEBUG: irods_authentication_scheme is not defined
+DEBUG: xmsg_port is not defined
+DEBUG: irods_debug is not defined
+DEBUG: irods_log_level is not defined
+DEBUG: irods_authentication_file is not defined
+DEBUG: irods_ssl_ca_certificate_path is not defined
+DEBUG: irods_ssl_ca_certificate_file is not defined
+DEBUG: irods_plugins_home is not defined
+ ERROR: [-]	/repos/irods/lib/core/src/sockComm.cpp:779:int connectToRhost(rcComm_t *, int, int) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [failed to call 'read header']
+	[-]	/repos/irods/lib/core/src/sockComm.cpp:527:irods::error readVersion(irods::network_object_ptr, version_t **) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [failed to call 'read header']
+		[-]	/repos/irods/lib/core/src/sockComm.cpp:197:irods::error readMsgHeader(irods::network_object_ptr, msgHeader_t *, struct timeval *) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [failed to call 'read header']
+			[-]	/repos/irods/plugins/network/tcp/libtcp.cpp:190:irods::error tcp_read_msg_header(irods::plugin_context &, void *, struct timeval *) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [error reading from socket after [0] bytes read]
+				[-]	/repos/irods/plugins/network/tcp/libtcp.cpp:71:irods::error tcp_socket_read(int, void *, int, int &, struct timeval *) :  status [SYS_SOCK_READ_ERR]  errno [Connection reset by peer] -- message [error reading from socket after [0] bytes read]
+
+ ERROR: _rcConnect: connectToRhost error, server on irods.container:1247 is probably down status = -116104 SYS_SOCK_READ_ERR, Connection reset by peer
+ ERROR: iRODS Exception:
+    file: /repos/irods/lib/core/src/client_connection.cpp
+    function: void irods::experimental::client_connection::connect_and_login(const std::string_view, const int, const std::string_view, const std::string_view)
+    line: 91
+    code: -305000 (USER_SOCK_CONNECT_ERR)
+    message:
+        connect error
+stack trace:
+--------------
+
+Dumping stack trace
+<0>	Offset: 0x6e 	Address: 0x7f9b2920abae	irods::exception::exception(long, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)
+<1>	Offset: 0x184	Address: 0x7f9b2a205984	irods::experimental::client_connection::connect_and_login(std::__1::basic_string_view<char, std::__1::char_traits<char> >, int, std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::basic_string_view<char, std::__1::char_traits<char> >)
+<2>	Offset: 0xa1 	Address: 0x7f9b2a2057c1	irods::experimental::client_connection::client_connection()
+<3>	Offset:      	Address: 0x41c6a8	irodsReServer(main+0x3e8) [0x41c6a8]
+<4>	Offset:      	Address: 0x7f9b27df9555	/lib64/libc.so.6(__libc_start_main+0xf5) [0x7f9b27df9555]
+<5>	Offset:      	Address: 0x41c1fa	irodsReServer() [0x41c1fa]
+
+
+sending header: len = 140
+<MsgHeader_PI>
+<type>RODS_CS_NEG_T</type>
+<msgLen>141</msgLen>
+<errorLen>0</errorLen>
+<bsLen>0</bsLen>
+<intInfo>0</intInfo>
+</MsgHeader_PI>
+
+sending msg: 
+<CS_NEG_PI>
+<status>1</status>
+<result>cs_neg_sid_kw=8ce09dfb342d48e29c9710d3b2826d7a;cs_neg_result_kw=CS_NEG_USE_SSL;</result>
+</CS_NEG_PI>
+
+DEBUG: RE server is going to sleep.

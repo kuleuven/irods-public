@@ -1,0 +1,19 @@
+Jun 14 10:21:06 pid:117 NOTICE: Initializing server ...
+Jun 14 10:21:06 pid:117 NOTICE: Forking agent factory ...
+Jun 14 10:21:06 pid:117 NOTICE: Agent factory PID = [122]
+Jun 14 10:21:06 pid:122 NOTICE: Initializing agent factory ...
+    LocalHostName:  localhost, irods.container, Port Num: 1247.
+
+Zone Info:
+    ZoneName: test   Type: LOCAL_ICAT    HostAddr: localhost   PortNum: 1247
+
+reHost:   localhost
+
+Jun 14 10:21:06 pid:117 NOTICE: rodsServer Release version rods4.2.9 - API Version d is up
+Jun 14 10:21:06 pid:117 NOTICE: Forking Rule Execution Server (irodsReServer) ...
+Jun 14 10:21:06 pid:117 NOTICE: >>> control plane :: listening on port 1248
+Jun 14 10:21:07 pid:117 NOTICE: buffer_crypt::decrypt - algorithm not supported [aes-256-cbc]
+Jun 14 10:21:07 pid:117 NOTICE: buffer_crypt::encrypt - algorithm not supported [aes-256-cbc]
+Jun 14 10:21:08 pid:117 NOTICE: iRODS Server is exiting with state [server_state_stopped].
+Jun 14 10:21:09 pid:117 NOTICE: buffer_crypt::encrypt - algorithm not supported [aes-256-cbc]
+Jun 14 10:21:09 pid:117 NOTICE: iRODS Server is done.

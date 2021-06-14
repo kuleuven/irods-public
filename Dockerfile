@@ -95,3 +95,5 @@ EXPOSE 1247
 
 # Control plane port - only to be used with consumers
 EXPOSE 1248
+
+RUN yum -y install rabbitmq-server

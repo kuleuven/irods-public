@@ -47,5 +47,5 @@ docker run -d --name $IRODS_NAME --link $MYSQL_NAME \
 set -e
 
 until docker exec -i $IRODS_NAME /usr/local/bin/healthcheck; do
-  sleep 1
+  sleep 0.5
 done

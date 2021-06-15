@@ -17,10 +17,6 @@ RUN yum install -y \
   irods-rule-engine-plugin-python-${VERSION}.0 \
   irods-devel-${VERSION} \
   irods-rule-engine-plugin-audit-amqp-${VERSION}.0 \
-#  irods-rule-engine-plugin-logical-quotas-${VERSION}.0 \
-#  irods-rule-engine-plugin-metadata-guard-${VERSION}.0 \
-  irods-rule-engine-plugin-unified-storage-tiering-${VERSION}.0 \
-  irods-resource-plugin-s3-${VERSION}.0 \
   unixODBC \
   supervisor \
   gettext \
@@ -37,24 +33,7 @@ RUN yum install -y \
 # Use more recent mysql odbc connector
 RUN yum localinstall -y https://repo.mysql.com/yum/mysql-connectors-community/el/7/x86_64/mysql-connector-odbc-8.0.25-1.el7.x86_64.rpm
 
-RUN yum install -y netcdf-devel gcc hdf5-devel
-
-RUN echo set smtp=smtp://smtp.network.local:25 >> /etc/mail.rc
-RUN echo set from=irods@network.local >> /etc/mail.rc
-
-RUN pip install --upgrade pip==18.0 setuptools==18.0 && pip install cython && pip install \
-  jsonschema \
-  irods-avu-json \
-  requests==2.6.0 \
-  requests-cache==0.5.2 \
-  xmltodict \
-  jinja2 \
-  pathvalidate \
-  netcdf4 \
-  pandas
-
 ADD etc/ /etc/
-ADD ${SHORT_TIER}/etc/ /etc/
 ADD bin/ /usr/local/bin/
 ADD irods/server_config.json.tmpl /etc/irods/
 ADD irods/irods_environment.json.tmpl /etc/irods/
@@ -62,7 +41,6 @@ ADD irods/irods_environment.json.tmpl /etc/irods/
 RUN apply-patches
 
 RUN mkdir -p /etc/irods/ssl && openssl dhparam -2 -out /etc/irods/ssl/dhparams.pem 2048
-RUN mkdir -p /tmp/oidc
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint"]
 

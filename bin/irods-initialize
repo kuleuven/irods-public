@@ -1,0 +1,52 @@
+#!/bin/bash
+
+run_irods() {
+  runuser -u irods -- "$@"
+}
+
+irods_ping() { (
+  echo -ne '\x00\x00\x00\x33'
+  echo '<MsgHeader_PI><type>HEARTBEAT</type></MsgHeader_PI>'
+) | nc $SERVER $SRV_PORT | grep -q HEARTBEAT; }
+
+irods_sanity_check() {
+  run_irods iadmin lu rods | grep -q rods
+}
+
+initial_setup() {
+  # Set public flag
+  run_irods ichmod -M read public /$ZONE /$ZONE/home
+}
+
+# Do not bother irods when it is starting up, this might crash everything
+sleep 1
+
+for i in $(seq 1 5); do
+  # Wait for initial start up
+  until irods_ping; do
+    sleep 5 
+  done
+
+  # Wait for irods to settle
+  sleep 2
+
+  # Do sanity check
+  if irods_sanity_check; then
+    initial_setup
+
+    sleep infinity
+  else
+    echo "-----------------------------------------"
+    echo "|       IRODS sanity check failed       |"
+    echo "| Possible 4.2.9 race condition problem |"
+    echo "-----------------------------------------"
+
+    # Something went wrong - kill ourselves
+    supervisorctl restart irods
+  fi
+done
+
+# kill ourselves
+kill 1
+
+exit 1

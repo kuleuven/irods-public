@@ -46,5 +46,10 @@ docker run -d --name $IRODS_NAME --link $POSTGRESQL_NAME \
 set -e
 
 until docker exec -i $IRODS_NAME /usr/local/bin/healthcheck; do
-  sleep 1
+  sleep 0.5
+done
+
+echo Starting stress test
+for i in $(seq 1 100); do 
+  docker exec -ti irods runuser -u irods -- iadmin lu
 done

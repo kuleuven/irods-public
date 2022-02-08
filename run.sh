@@ -19,14 +19,15 @@ test -f ssl/cert.pem || docker run -i --rm -v $(pwd)/ssl:/ssl securefab/openssl 
 cat ssl/cert.pem > ssl/ca-bundle.pem
 
 docker run -d --name $MYSQL_NAME -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD mysql:8
-sleep 15
-docker exec -i $MYSQL_NAME mysql -h localhost -uroot -p$MYSQL_ROOT_PASSWORD <<'EOF'
+sleep 25
+docker exec -i $MYSQL_NAME mysql -p$MYSQL_ROOT_PASSWORD <<'EOF'
 CREATE DATABASE irods;
 ALTER DATABASE irods CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 CREATE USER 'irods'@'%' IDENTIFIED WITH mysql_native_password BY 'irods';
 GRANT ALL ON irods.* TO 'irods'@'%';
 SET GLOBAL TRANSACTION ISOLATION LEVEL READ COMMITTED;
 SET GLOBAL log_bin_trust_function_creators = 1;
+SET @@GLOBAL.ENFORCE_GTID_CONSISTENCY = WARN;
 EOF
 
 docker run -d --name $IRODS_NAME --link $MYSQL_NAME \
@@ -53,3 +54,4 @@ until docker exec -i $IRODS_NAME /usr/local/bin/healthcheck; do
 done
 
 echo IRODS ready
+docker exec -ti -u irods $IRODS_NAME bash

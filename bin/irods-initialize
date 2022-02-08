@@ -7,7 +7,7 @@ run_irods() {
 irods_ping() { (
   echo -ne '\x00\x00\x00\x33'
   echo '<MsgHeader_PI><type>HEARTBEAT</type></MsgHeader_PI>'
-) | nc $SERVER $SRV_PORT | grep -q HEARTBEAT; }
+) | nc -4 $SERVER $SRV_PORT | grep -q HEARTBEAT; }
 
 irods_sanity_check() {
   run_irods iadmin lu rods | grep -q rods
@@ -16,10 +16,37 @@ irods_sanity_check() {
 initial_setup() {
   # Set public flag
   run_irods ichmod -M read public /$ZONE /$ZONE/home
+
+  # Add default, vault1, vault2, vault3 and vault4 resources
+  for RESOURCE in default vault1 vault2 vault3 vault4; do
+    if ! run_irods iadmin lr | grep -qx $RESOURCE; then
+      run_irods iadmin mkresc $RESOURCE passthru
+    fi
+  done
+
+  # Rename demoResc to netapp if it is present
+  if run_irods iadmin lr | grep -qx demoResc; then
+    yes | run_irods iadmin modresc demoResc name netapp
+  fi
+
+  # Add netapp to default resource - this can fail if it is already the case
+  run_irods iadmin addchildtoresc default netapp
+
+  # Fixup sql queries
+  run_irods iadmin rsq listUserACLForDataObjViaGroup || true
+  run_irods iadmin asq "SELECT R_USER_MAIN.user_name, R_USER_MAIN.user_id, R_OBJT_ACCESS.access_type_id, R_USER_MAIN.user_type_name, R_USER_MAIN.zone_name, R_COLL_MAIN.coll_name, USER_GROUP_MAIN.user_name, R_COLL_MAIN.coll_name FROM R_USER_MAIN AS USER_GROUP_MAIN JOIN R_USER_GROUP ON USER_GROUP_MAIN.user_id = R_USER_GROUP.group_user_id JOIN R_USER_MAIN ON R_USER_GROUP.user_id = R_USER_MAIN.user_id JOIN R_OBJT_ACCESS ON R_USER_GROUP.group_user_id = R_OBJT_ACCESS.user_id JOIN R_COLL_MAIN ON R_OBJT_ACCESS.object_id = R_COLL_MAIN.coll_id WHERE R_COLL_MAIN.coll_name = ? AND R_USER_MAIN.user_name = ? ORDER BY R_COLL_MAIN.coll_name, R_USER_MAIN.user_name, R_OBJT_ACCESS.access_type_id DESC" listUserACLForDataObjViaGroup  
+
+  run_irods iadmin rsq listUserACLForCollectionViaGroup || true
+  run_irods iadmin asq "SELECT R_USER_MAIN.user_name, R_USER_MAIN.user_id, R_OBJT_ACCESS.access_type_id, R_USER_MAIN.user_type_name, R_USER_MAIN.zone_name, R_COLL_MAIN.coll_name, USER_GROUP_MAIN.user_name, R_COLL_MAIN.coll_name FROM R_USER_MAIN AS USER_GROUP_MAIN JOIN R_USER_GROUP ON USER_GROUP_MAIN.user_id = R_USER_GROUP.group_user_id JOIN R_USER_MAIN ON R_USER_GROUP.user_id = R_USER_MAIN.user_id JOIN R_OBJT_ACCESS ON R_USER_GROUP.group_user_id = R_OBJT_ACCESS.user_id JOIN R_COLL_MAIN ON R_OBJT_ACCESS.object_id = R_COLL_MAIN.coll_id WHERE R_COLL_MAIN.coll_name = ? AND R_USER_MAIN.user_name = ? ORDER BY R_COLL_MAIN.coll_name, R_USER_MAIN.user_name, R_OBJT_ACCESS.access_type_id DESC" listUserACLForCollectionViaGroup
+
+  # Add minimum_free_space_for_create_in_bytes to netapp
+  #i iadmin modresc netapp context minimum_free_space_for_create_in_bytes=21474836480
 }
 
 # Do not bother irods when it is starting up, this might crash everything
 sleep 1
+
+initialized=0
 
 for i in $(seq 1 5); do
   # Wait for initial start up
@@ -31,19 +58,19 @@ for i in $(seq 1 5); do
   sleep 2
 
   # Do sanity check
-  if irods_sanity_check; then
-    initial_setup
+  while irods_sanity_check; do
+    [ $initialized -eq 1 ] || initial_setup
 
-    sleep infinity
-  else
-    echo "-----------------------------------------"
-    echo "|       IRODS sanity check failed       |"
-    echo "| Possible 4.2.9 race condition problem |"
-    echo "-----------------------------------------"
+    initialized=1
+    sleep 3600
+  done
+    
+  echo "-----------------------------------------"
+  echo "|       IRODS sanity check failed       |"
+  echo "-----------------------------------------"
 
-    # Something went wrong - kill ourselves
-    supervisorctl restart irods
-  fi
+  # Something went wrong - kill ourselves
+  supervisorctl restart irods
 done
 
 # kill ourselves

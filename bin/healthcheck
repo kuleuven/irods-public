@@ -7,10 +7,10 @@ run_irods() {
 irods_ping() { (
   echo -ne '\x00\x00\x00\x33'
   echo '<MsgHeader_PI><type>HEARTBEAT</type></MsgHeader_PI>'
-) | nc $SERVER $SRV_PORT | grep -q HEARTBEAT; }
+) | nc -4 $SERVER $SRV_PORT | grep -q HEARTBEAT; }
 
 irods_sanity_check() {
-  run_irods iadmin lu rods | grep -q rods
+  run_irods iadmin lu rods 2>/dev/null | grep -q rods
 }
 
 die() {
@@ -26,5 +26,4 @@ fi
 
 irods_ping || die 1 "IRODS is not responding to HEATBEAT"
 irods_sanity_check || die 2 "IRODS fails sanity check"
-echo Everything is fine
 exit 0

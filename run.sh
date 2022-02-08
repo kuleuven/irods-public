@@ -1,6 +1,6 @@
 #!/bin/bash
 
-: ${VERSION:=4.2.9}
+: ${VERSION:=4.2.11}
 
 MYSQL_NAME=mysql
 MYSQL_ROOT_PASSWORD=rootpw
@@ -18,13 +18,15 @@ test -f ssl/cert.pem || docker run -i --rm -v $(pwd)/ssl:/ssl securefab/openssl 
      -addext "subjectAltName = DNS:$IRODS_HOST"
 cat ssl/cert.pem > ssl/ca-bundle.pem
 
-docker run -d --name $MYSQL_NAME -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD mysql:5
+docker run -d --name $MYSQL_NAME -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD mysql:8
 sleep 15
 docker exec -i $MYSQL_NAME mysql -h localhost -uroot -p$MYSQL_ROOT_PASSWORD <<'EOF'
 CREATE DATABASE irods;
-ALTER DATABASE irods CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER DATABASE irods CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
 CREATE USER 'irods'@'%' IDENTIFIED WITH mysql_native_password BY 'irods';
 GRANT ALL ON irods.* TO 'irods'@'%';
+SET GLOBAL TRANSACTION ISOLATION LEVEL READ COMMITTED;
+SET GLOBAL log_bin_trust_function_creators = 1;
 EOF
 
 docker run -d --name $IRODS_NAME --link $MYSQL_NAME \
@@ -50,7 +52,4 @@ until docker exec -i $IRODS_NAME /usr/local/bin/healthcheck; do
   sleep 0.5
 done
 
-echo Starting stress test
-for i in $(seq 1 100); do 
-  docker exec -ti irods runuser -u irods -- iadmin lu
-done
+echo IRODS ready

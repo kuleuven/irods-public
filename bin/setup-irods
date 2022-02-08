@@ -1,4 +1,4 @@
-#!/bin/bash
+/bin/bash
 
 # Bail out if irods is already configured
 if [ -f /etc/irods/server_config.json ]; then
@@ -10,7 +10,28 @@ STAGING=/var/lib/irods/.dockerstaging
 
 mkdir -p $STAGING
 
-cat > $STAGING/setup.cfg <<EOF
+if [[ "$ROLE" == "consumer" ]] ; then
+  cat > $STAGING/setup.cfg <<EOF
+irods
+irods
+2
+${ZONE}
+${PROVIDER_SERVER}
+${SRV_PORT}
+${SRV_PORT_RANGE_START}
+${SRV_PORT_RANGE_END}
+${CTRL_PLANE_PORT}
+file:///var/lib/irods/configuration_schemas
+${ADMIN_USER}
+yes
+${SRV_ZONE_KEY}
+${SRV_NEGOTIATION_KEY}
+${CTRL_PLANE_KEY}
+${ADMIN_PASS}
+${DEFAULT_VAULT_DIR}
+EOF
+else
+  cat > $STAGING/setup.cfg <<EOF
 irods
 irods
 1
@@ -37,6 +58,7 @@ ${CTRL_PLANE_KEY}
 ${ADMIN_PASS}
 ${DEFAULT_VAULT_DIR}
 EOF
+fi
 
 # Sleep until network is set up correctly
 sleep 1
@@ -55,12 +77,9 @@ fi
 # Set up global irods configuration
 python /var/lib/irods/scripts/setup_irods.py < $STAGING/setup.cfg 2>&1 | tee $STAGING/setup.log
 
-# Stop irods if it is started automatically
-/sbin/runuser -u irods -- /var/lib/irods/irodsctl stop || true
-
 # Patch server_config.json
 export RE_RULEBASE_SET_JSON='["'$(echo "$RE_RULEBASE_SET" | sed 's/\s\s*/", "/g')'"]'
-patch-json /etc/irods/server_config.json
+patch-json /etc/irods/server_config.json /etc/irods/server_config.json.${ROLE}-tmpl
 
 # Patch irods_environment.json
 patch-json /var/lib/irods/.irods/irods_environment.json /etc/irods/irods_environment.json.tmpl

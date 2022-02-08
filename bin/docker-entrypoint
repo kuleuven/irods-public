@@ -6,6 +6,9 @@ if [ "$(hostname)" != "$SERVER" ]; then
   exit 1
 fi
 
+# Sleep until some docker or podman hacks have configured the network
+sleep 2
+
 setup-vault
 setup-irods
 setup-ssl

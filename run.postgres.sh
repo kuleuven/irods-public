@@ -1,6 +1,6 @@
 #!/bin/bash
 
-: ${VERSION:=4.2.9}
+: ${VERSION:=4.2.11}
 
 POSTGRESQL_NAME=postgres
 POSTGRESQL_ROOT_PASSWORD=rootpw
@@ -49,7 +49,4 @@ until docker exec -i $IRODS_NAME /usr/local/bin/healthcheck; do
   sleep 0.5
 done
 
-echo Starting stress test
-for i in $(seq 1 100); do 
-  docker exec -ti irods runuser -u irods -- iadmin lu
-done
+echo IRODS ready

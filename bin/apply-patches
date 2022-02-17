@@ -2,6 +2,7 @@
 
 # Patch sql setup scripts
 sed -i "s/^SET SESSION .*storage_engine=.*/SET SESSION default_storage_engine='InnoDB';/" /var/lib/irods/packaging/sql/icatSysTables.sql /var/lib/irods/packaging/sql/mysql_functions.sql
+sed -i "s/ engine = MyISAM;$/;/" /var/lib/irods/packaging/sql/icatSysTables.sql
 
 # Let irods cope with ipv6 database servers
 #curl https://raw.githubusercontent.com/pypyodbc/pypyodbc/main/pypyodbc.py > /var/lib/irods/scripts/irods/pypyodbc.py
